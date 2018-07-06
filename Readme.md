@@ -63,6 +63,14 @@ git commit -m "The message you publish with the new committed changes"
 git push -u origin master
 '''
 
-
+Now you are ready to run the flask "web server". The following command prompt will initiate the web service:
+'''
 FLASK_APP=hello.py flask run
+'''
+
+After you issue the command above the system will respond with a url that you can put in your favourite browser to test your flask pages.  Here's an example of what that url may look like:
+'''
 http://127.0.0.1:5000/hello
+'''
+
+When you're done testing the ctrl-C key combination will escape you out of the process so you have your terminal prompt back.
