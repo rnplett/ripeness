@@ -1,8 +1,7 @@
 import datetime, re, os
 from pandas import Series, DataFrame
 from flask import Flask
-from flask import jsonify
-from flask import request
+#from flask import request
 
 app = Flask(__name__)
 
@@ -23,5 +22,5 @@ def SportPoll(Sport=None):
     except:
         SportList = t
     SportList.to_csv('data/SportPoll.csv')
-    r = dict(SportList['sport'].value_counts())
-    return jsonify(r)
+    r = DataFrame(SportList['sport'].value_counts())
+    return r.to_html(border=0)

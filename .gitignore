@@ -1,4 +1,4 @@
 output
-vFlaskBareDash
+venv
 credentials.py
 *.pyc
