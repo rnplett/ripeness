@@ -30,15 +30,14 @@ def SportPoll(Sport=None):
 @app.route('/who')
 def who():
     url = "https://api.meraki.com/api/v0/organizations"
-    #querystring = {""}
+
     headers = {
-       'Cache-Control': "no-cache",
-       'X-Cisco-Meraki-API-Key': MERAKI_KEY
+       'cache-control': "no-cache",
+       'x-cisco-meraki-api-key': MERAKI_KEY
        }
-    #response = requests.request("GET", url, headers=headers, params=querystring)
-    response = requests.request("GET", url, headers=headers)
+    payload = ""
+    response = requests.request("GET", url, data=payload, headers=headers)
 
     r = response.text
-    print(response.text)
 
     return r
