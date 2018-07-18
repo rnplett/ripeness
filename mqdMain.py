@@ -13,7 +13,11 @@ def hello():
 @app.route('/who')
 def who():
     r = getGroup()
-    return str(r)
+    r = getClients(r[0]['id'])
+    c = ""
+    for i in r:
+        c = c + str(i['description']) + "<br>"
+    return str(c)
 
 @app.route('/group')
 def group():
