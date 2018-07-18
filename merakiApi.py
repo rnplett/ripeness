@@ -35,10 +35,11 @@ def getDevices(oid):
 
 def getClients(oid):
 
-    r = getDevices(oid)
-    h = []
+    devices = getDevices(oid)
+    clients = DataFrame()
 
-    for i in r:
+    for i in devices:
+        i = dict(i)
         url = "https://dashboard.meraki.com/api/v0/devices/" + str(i['serial']) + "/clients?timespan=900"
         headers = {
             'x-cisco-meraki-api-key': MERAKI_KEY,
@@ -47,6 +48,9 @@ def getClients(oid):
         payload = ""
         response = requests.request("GET", url, data=payload, headers=headers)
         r = json.loads(response.text)
-        h = h + r
-
-    return h
+        rdf = DataFrame(r)
+        for k,v in i.items():
+            rdf[k] = v
+        clients = clients.append(rdf)
+        
+    return clients

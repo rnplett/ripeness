@@ -1,4 +1,5 @@
 from merakiApi import *
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -12,27 +13,25 @@ def hello():
 
 @app.route('/who')
 def who():
-    r = getGroup()
-    r = getClients(r[0]['id'])
-    c = ""
-    for i in r:
-        c = c + str(i['description']) + "<br>"
-    return str(c)
+    # Get Directory data
+    d = pd.read_csv("data/directory.csv")
+    d.columns = ["client","FullName"]
+
+    # Get Client data from Meraki API
+    g = getGroup()
+    c = getClients(g[0]['id'])
+    c = c.loc[:,["description","mac","serial"]]
+    c.columns = ["client","gatewayMac","gatewaySN"]
+
+    # Add directory data to the Client data for display.
+    clientDevices = c.merge(d,'left')
+    summary = DataFrame(clientDevices["FullName"].value_counts())
+    summary.columns = ["Device_Count"]
+
+    return summary.to_html(border=0)
 
 @app.route('/group')
 def group():
     r = getGroup()
     html = "The Group Name is: " + str(r[0]['name']) + "<br>" + "The Group ID is: " + str(r[0]['id'])
     return html
-
-# @app.route('/SportPoll/vote/<Sport>')
-# def SportPoll(Sport=None):
-#     t = DataFrame({'sport':[str(Sport)]})
-#     try:
-#         SportList = DataFrame.from_csv('data/SportPoll.csv')
-#         SportList = SportList.append(t, ignore_index=True)
-#     except:
-#         SportList = t
-#     SportList.to_csv('data/SportPoll.csv')
-#     r = DataFrame(SportList['sport'].value_counts())
-#     return r.to_html(border=0)
