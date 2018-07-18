@@ -1,11 +1,20 @@
 from merakiApi import *
+from flask import Flask, render_template, abort
 import pandas as pd
 
 app = Flask(__name__)
 
 @app.route('/')
-def index():
-    return 'Index Page'
+@app.route('/home')
+def home():
+    return render_template('home.html', products=PRODUCTS)
+
+@app.route('/product/<key>')
+def product(key):
+    product = PRODUCTS.get(key)
+    if not product:
+        abort(404)
+    return render_template('product.html', product=product)
 
 @app.route('/hello')
 def hello():
