@@ -20,18 +20,20 @@ def home():
     # Add directory data to the Client data for display.
     clientDevices = c.merge(d,'left')
     people = DataFrame(clientDevices["FullName"].value_counts())
-    people.columns = ["Device_Count"]
+    people["Description"] = people.index
+    people.index = [s.replace(' ','') for s in people.index]
+    people.columns = ["Device_Count","FullName"]
 
     people.to_json("data/people.json", orient="index")
 
     return render_template('home.html', people=json.loads(people.to_json(orient="index")))
 
 @app.route('/person/<name>')
-def person(key):
+def person(name):
     people = pd.read_json("data/people.json")
     person = people[name]
-    if not person:
-        abort(404)
+    # if not person:
+    #     abort(404)
     return render_template('person.html', person=person)
 
 @app.route('/hello')
