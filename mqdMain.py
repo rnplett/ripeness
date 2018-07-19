@@ -7,14 +7,32 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html', products=PRODUCTS)
+    # Get Directory data
+    d = pd.read_csv("data/directory.csv")
+    d.columns = ["client","FullName"]
 
-@app.route('/product/<key>')
-def product(key):
-    product = PRODUCTS.get(key)
-    if not product:
+    # Get Client data from Meraki API
+    g = getGroup()
+    c = getClients(g[0]['id'])
+    c = c.loc[:,["description","mac","serial"]]
+    c.columns = ["client","gatewayMac","gatewaySN"]
+
+    # Add directory data to the Client data for display.
+    clientDevices = c.merge(d,'left')
+    people = DataFrame(clientDevices["FullName"].value_counts())
+    people.columns = ["Device_Count"]
+
+    people.to_json("data/people.json", orient="index")
+
+    return render_template('home.html', people=json.loads(people.to_json(orient="index")))
+
+@app.route('/person/<name>')
+def person(key):
+    people = pd.read_json("data/people.json")
+    person = people[name]
+    if not person:
         abort(404)
-    return render_template('product.html', product=product)
+    return render_template('person.html', person=person)
 
 @app.route('/hello')
 def hello():
@@ -34,10 +52,10 @@ def who():
 
     # Add directory data to the Client data for display.
     clientDevices = c.merge(d,'left')
-    summary = DataFrame(clientDevices["FullName"].value_counts())
-    summary.columns = ["Device_Count"]
+    people = DataFrame(clientDevices["FullName"].value_counts())
+    people.columns = ["Device_Count"]
 
-    return summary.to_html(border=0)
+    return people.to_html(border=0)
 
 @app.route('/group')
 def group():

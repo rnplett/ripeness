@@ -2,11 +2,11 @@
 
 {% block container %}
   <div class="top-pad">
-    {% for id, product in products.items() %}
+    {% for id, person in people.items() %}
       <div class="well">
         <h2>
-          <a href="{{ url_for('product', key=id) }}">{{product['name'] }}</a>
-          <small>$ {{ product['price'] }}</small>
+          <a href="{{ url_for('person', name=id ) }}">{{ id }}</a>
+          <small> - has {{ person['Device_Count'] }} active devices</small>
         </h2>
       </div>
     {% endfor %}
