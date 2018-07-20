@@ -21,20 +21,22 @@ This is the "Hello World" page for this app.
 
 <b>After Hello World</b> its time to do something more interesting. This happens when you can source data from one or more API's and then combine them in an interesting way that's specific to how your users want to see it.
 
-In this case data is pulled from the Meraki Dashboard API and a local directory file. The network client data from the API and the directory entries are combined to indicate how many devices are represented by each active directory entry.
+In this case data is pulled from the Meraki Dashboard API and a local directory file. The network client data from the API and the directory entries are combined to indicate how many devices are represented by each directory entry that's active in the Meraki Dashboard.
 
-Here's a look at the <b>directory and file framework</b> that is used in the example:
+In addition to the files and directories in this repo you will need to create some supporting files and directories that contain your app's specific information.
+
+Here's a look at the <b>directory and file framework</b> used for the example implementation of this repo:<br>
 ![Directory Tree](lstree.png "Directory Tree")
 
-As noted above the main flask file is mqdMain.py which is what you run to start the web service.
+The main flask file is mqdMain.py which is what you run to start the web service as described above.
 
-You'll notice the merakiApi.py file that contains all the functions used to call the Meraki API. These functions return the data to the main function for processing.
+The merakiApi.py file contains all the functions used to call the Meraki API. These functions return the data to the main flask app function for processing.
 
-These two python files contain all the scripts required but there are a number of supporting files that are important to note in the directory tree.
+These two python files contain all the python scripts required but there are a number of supporting files that are important to note in the directory tree.
 
-<b>data</b> diretory:  is used to store data sources. Mostly these files are read/write and are used to store data between calls or from outside sources. This directory is not part of the repo and needs to be created after the repo is cloned.
+<b>data</b> directory:  is used to store data sources. These files are usually read/write and are used to store data between page loads or from outside sources. This directory is not part of the repo because it contains sensitive data and needs to be created after the repo is cloned.
 
-<b>inputs</b> directory:  is for storing constants and data structures that are use case specific like credentials, certificates and other proprietary information. This directory is not part of the repo and needs to be created after the repo is cloned.
+<b>inputs</b> directory:  is for storing constants and data structures that are also sensative and use case specific. These include credentials, certificates and other proprietary information. This directory is not part of the repo and needs to be created after the repo is cloned.
 
 <b>static</b> directory:  contains js scripts and css data for the jinja2 templates.
 
