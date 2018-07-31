@@ -2,13 +2,16 @@
 
 {% block container %}
   <div class="top-pad">
-    {% for id, person in people.items() %}
-      <div class="well">
-        <h2>
-          <a href="{{ url_for('person', name=id ) }}">{{ person['FullName'] }}</a>
-          <small> - has {{ person['Device_Count'] }} active devices</small>
-        </h2>
-      </div>
-    {% endfor %}
+        <form action="" method="post">
+            {{ form.csrf }}
+
+            <div class="input text">
+                {{ form.name.label }} {{ form.name }}
+            </div>
+
+            <div class="input submit">
+                <input type="submit" value="Submit" />
+            </div>
+        </form>
   </div>
 {% endblock %}
