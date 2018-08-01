@@ -11,13 +11,13 @@ quandl.ApiConfig.api_key = QUANDL_API_KEY
 def getData(sym):
     base = datetime.today()
     dateList = [(base - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(0, 200)]
-    p = ""
     try:
         p = quandl.get_table('SHARADAR/SEP', ticker=sym, date=dateList,
                              qopts={"columns": ["ticker", "date", "open", "high", "low", "close"]})
         p.columns = ["Symbol", "Date", "Open", "High", "Low", "Close"]
     except:
         print("Quandl read error")
+        p = ""
     return p
 
 class ReusableForm(Form):
@@ -25,17 +25,16 @@ class ReusableForm(Form):
 
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/home')
+@app.route('/', methods=['GET','POST'])
+@app.route('/home', methods=['GET','POST'])
 def home():
     if request.method == 'POST':
-        flash('Hello there')
-        sym = 'SPY'
+        sym = request.form['name']
         p = getData(sym)
         sym_info = {}
         sym_info["name"] = sym
         try:
-            sym_info["describe"] = p.describe().to_json()
+            sym_info["describe"] = json.loads(p.head().to_json(orient="index"))
         except:
             sym_info["describe"] = "Error"
         return render_template('symbol.html', sym_info=sym_info)
@@ -44,17 +43,6 @@ def home():
         print(form.errors)
 
     return render_template('home.html', form = form)
-
-@app.route('/entry/<sym>')
-def entry(sym):
-    p = getData(sym)
-    sym_info = {}
-    sym_info["name"] = sym
-    try:
-        sym_info["describe"] = p.describe().to_json()
-    except:
-        sym_info["describe"] = "Error"
-    return render_template('symbol.html', sym_info=sym_info)
 
 @app.route('/hello')
 def hello():

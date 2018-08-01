@@ -3,6 +3,10 @@
 {% block container %}
   <div class="top-pad">
     <h1>{{ sym_info['name'] }}</h1>
-    <h3>{{ sym_info['describe'] }}</h3>
+    {% for id, bar in sym_info["describe"].items() %}
+      <div class="well">
+        Date: {{bar["Date"]}} Open: {{bar["Open"]}} High: {{bar["High"]}} Close: {{bar["Close"]}}
+      </div>
+    {% endfor %}
   </div>
 {% endblock %}
