@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d8edf04-58ba-463f-b553-7594c840e507" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/tradeObject.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ripeMain.py" beforeDir="false" afterPath="$PROJECT_DIR$/ripeMain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/symbol.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/symbol.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tradeObject.py" beforeDir="false" afterPath="$PROJECT_DIR$/tradeObject.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,7 +17,7 @@
       <file leaf-file-name="ripeMain.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ripeMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="-85">
               <caret line="7" lean-forward="true" selection-start-line="2" selection-end-line="7" />
               <folding>
                 <element signature="e#0#63#0" expanded="true" />
@@ -32,8 +29,8 @@
       <file leaf-file-name="tradeObject.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tradeObject.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+            <state relative-caret-position="331">
+              <caret line="26" column="1" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -200,8 +197,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24973656" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24973656" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32900432" />
@@ -209,7 +207,7 @@
       <window_info anchor="bottom" id="Python Console" weight="0.32900432" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32900432" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.32900432" />
+      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.32900432" />
       <window_info id="Favorites" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -268,7 +266,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ripeMain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
+        <state relative-caret-position="-85">
           <caret line="7" lean-forward="true" selection-start-line="2" selection-end-line="7" />
           <folding>
             <element signature="e#0#63#0" expanded="true" />
@@ -278,8 +276,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tradeObject.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        <state relative-caret-position="331">
+          <caret line="26" column="1" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
