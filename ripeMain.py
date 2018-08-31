@@ -14,7 +14,8 @@ def getData(sym):
     try:
         p = quandl.get_table('SHARADAR/SEP', ticker=sym, date=dateList,
                              qopts={"columns": ["ticker", "date", "open", "high", "low", "close"]})
-        p.columns = ["Symbol", "Date", "Open", "High", "Low", "Close"]
+        p.columns = ["Symbol", "datetime", "Open", "High", "Low", "Close"]
+        p["Date"] = p["datetime"].apply(lambda x: x.strftime('%Y-%m-%d'))
     except:
         print("Quandl read error")
         p = ""
