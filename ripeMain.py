@@ -1,25 +1,9 @@
 from flask import Flask, render_template, abort, flash, request
 from wtforms import Form, SubmitField, BooleanField, StringField, validators
-import pandas as pd
-import quandl
+from tradeObject import *
 import json
 from inputs.settings import *
 from datetime import datetime, time, timedelta
-
-quandl.ApiConfig.api_key = QUANDL_API_KEY
-
-def getData(sym):
-    base = datetime.today()
-    dateList = [(base - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(0, 200)]
-    try:
-        p = quandl.get_table('SHARADAR/SEP', ticker=sym, date=dateList,
-                             qopts={"columns": ["ticker", "date", "open", "high", "low", "close"]})
-        p.columns = ["Symbol", "datetime", "Open", "High", "Low", "Close"]
-        p["Date"] = p["datetime"].apply(lambda x: x.strftime('%Y-%m-%d'))
-    except:
-        print("Quandl read error")
-        p = ""
-    return p
 
 class ReusableForm(Form):
     name = StringField('Enter Ticker:', validators=[validators.required()])
@@ -31,11 +15,14 @@ app = Flask(__name__)
 def home():
     if request.method == 'POST':
         sym = request.form['name']
-        p = getData(sym)
+        pick = tradeObject()
+        pick.daQuandl(sym)
+        pick.createChart()
         sym_info = {}
+        sym_info["chart"] = pick.chartURI
         sym_info["name"] = sym
         try:
-            sym_info["describe"] = json.loads(p.head().to_json(orient="index"))
+            sym_info["describe"] = json.loads(pick.describe.to_json(orient="index"))
         except:
             sym_info["describe"] = "Error"
         return render_template('symbol.html', sym_info=sym_info)

@@ -2,6 +2,13 @@ import pandas as pd
 import quandl
 import json
 import sys
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from mpl_finance import candlestick2_ohlc
+import matplotlib.colors
+from io import BytesIO
+import base64
+
 from inputs.settings import *
 from datetime import datetime, time, timedelta
 
@@ -44,25 +51,35 @@ class tradeObject(object):
             ["%s: %s" % (attrname, str(getattr(self, attrname))) for attrname in attr_list
              if getattr(self, attrname, None) is not None])
 
-    def daGoogleCSV(self,sym='SPY',start='Jan+1,+2008', end=None):
-        try:
-            p = pd.read_csv('https://finance.google.com/finance/historical?q=' + sym + '&startdate=' + start + '&output=csv')
-        except:
-            try:
-                p = pd.read_csv('https://finance.google.com/finance/historical?q=NYSE:' + sym + '&startdate=' + start + '&output=csv')
-            except:
-                print(sym + " - Google lookup error")
-
-        p = p[::-1]
-        p = p.reset_index(drop=True)
-        self.data = p
-
     def daQuandl(self,sym='SPY'):
+        quandl.ApiConfig.api_key = QUANDL_API_KEY
+        base = datetime.today()
+        dateList = [(base - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(0, 200)]
         try:
-            p = pd.read_csv('https://www.quandl.com/api/v3/datasets/WIKI/' + sym + '/data.csv?api_key=' + QUANDL_API_KEY)
+            p = quandl.get_table('SHARADAR/SEP', ticker=sym, date=dateList,
+                                 qopts={"columns": ["ticker", "date", "open", "high", "low", "close"]})
+            p.columns = ["Symbol", "datetime", "Open", "High", "Low", "Close"]
+            p["Date"] = p["datetime"].apply(lambda x: x.strftime('%Y-%m-%d'))
         except:
-            print(sym + " - Quandl lookup error")
-
-        p = p[::-1]
-        p = p.reset_index(drop=True)
+            print("Quandl read error")
+            p = ""
         self.data = p
+        self.describe = p.tail()
+
+    def addMAs(self):
+        ma8 = 3
+
+
+    def createChart(self):
+        fig, ax = plt.subplots(figsize=(8, 4))
+        candlestick2_ohlc(ax, self.data['Open'], self.data['High'], self.data['Low'], self.data['Close'], width=0.4)
+        locs = [0,20,40,60,80,100,120,len(self.data)-1]
+        plt.xticks(locs, self.data.loc[locs,'Date'])
+        fig.autofmt_xdate()
+        fig.tight_layout()
+        figfile = BytesIO()
+        fig.savefig(figfile, format='png')
+        figfile.seek(0)
+        figdata_png = base64.b64encode(figfile.getvalue()).decode('utf-8')
+        self.chartURI = 'data:image/png;base64,{}'.format(figdata_png)
+
