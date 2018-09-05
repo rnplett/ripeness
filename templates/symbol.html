@@ -6,7 +6,12 @@
     <img src="{{ sym_info['chart'] }}"/>
     {% for id, bar in sym_info["describe"].items() %}
       <div class="well">
-        <code>{{bar["Date"]}} O: {{ '%0.2f' % bar["Open"] }} H: {{ '%0.2f' % bar["High"]}} L: {{ '%0.2f' % bar["Low"]}} C: {{ '%0.2f' % bar["Close"]}}</code>
+        <code>{{bar["Date"]}}
+          O: {{ '%0.2f' % bar["Open"] }}
+          H: {{ '%0.2f' % bar["High"]}}
+          L: {{ '%0.2f' % bar["Low"]}}
+          C: {{ '%0.2f' % bar["Close"]}}
+        </code>
       </div>
     {% endfor %}
   </div>

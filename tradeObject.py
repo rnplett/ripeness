@@ -12,6 +12,7 @@ import base64
 from inputs.settings import *
 from datetime import datetime, time, timedelta
 
+
 class tradeObject(object):
     """
     object to standardize the definition and processing of a trading system.
@@ -82,4 +83,5 @@ class tradeObject(object):
         figfile.seek(0)
         figdata_png = base64.b64encode(figfile.getvalue()).decode('utf-8')
         self.chartURI = 'data:image/png;base64,{}'.format(figdata_png)
+        plt.close()
 
