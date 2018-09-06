@@ -65,17 +65,117 @@ class tradeObject(object):
             print("Quandl read error")
             p = ""
         self.data = p
-        self.describe = p.tail()
+        self.describe = p.tail(1)
 
-    def addMAs(self):
-        ma8 = 3
+    def bollinger_bands(self, m, n):
+        """
 
+        :param df: pandas.DataFrame
+        :param n:
+        :return: pandas.DataFrame
+        """
+        MA = pd.Series(self.data['Close'].rolling(n, min_periods=n).mean())
+        MSD = pd.Series(self.data['Close'].rolling(n, min_periods=n).std())
+        b1 = MA + m * MSD
+        B3 = pd.Series(b1, name='BBU_' + str(n))
+        self.data = self.data.join(B3)
+        b1 = MA - m * MSD
+        B4 = pd.Series(b1, name='BBD_' + str(n))
+        self.data = self.data.join(B4)
+        return
+
+    def keltner_channel(self, m, n):
+        """Calculate Keltner Channel for given data.
+        true range=max[(high - low), abs(high - previous close), abs (low - previous close)]
+
+        :param df: pandas.DataFrame
+        :param n:
+        :return: pandas.DataFrame
+        """
+        KelChM = pd.Series(self.data['Close'].rolling(n, min_periods=n).mean(), name='KelChM')
+        r1 = self.data['High'] - self.data['Low']
+        r2 = (self.data['High'] - self.data['Close'].shift(1)).abs()
+        r3 = (self.data['Low'] - self.data['Close'].shift(1)).abs()
+        TR = pd.DataFrame({'r1': r1, 'r2': r2, 'r3': r3}).max(axis=1)
+        ATR = pd.Series(TR.rolling(n, min_periods=n).mean())
+        KelChU = pd.Series(KelChM + ATR * m, name='KelChU')
+        KelChD = pd.Series(KelChM - ATR * m, name='KelChD')
+        try:
+            self.data = self.data.join(KelChM)
+            self.data = self.data.join(KelChU)
+            self.data = self.data.join(KelChD)
+        except:
+            self.data["KelChM"] = KelChM
+            self.data["KelChU"] = KelChU
+            self.data["KelChD"] = KelChD
+
+        return
+
+    def squeeze(self):
+        self.bollinger_bands( 2, 20)
+        self.keltner_channel( 1.5, 20)
+        self.data = self.data.join(pd.Series((self.data["BBU_20"] < self.data["KelChU"]) & (self.data["BBD_20"] > self.data["KelChD"]), name='Squeeze'))
+        return
+
+    def squeezeWeekly(self):
+        self.bollinger_bands( 2, 100)
+        self.keltner_channel( 1.5, 100)
+        self.data = self.data.join(pd.Series((self.data["BBU_20"] < self.data["KelChU"]) & (self.data["BBD_20"] > self.data["KelChD"]), name='SqueezeWeekly'))
+        return
+
+    def squeezeLen(self):
+        l = 0
+        for x in range(1, 26):
+            if self.data["Squeeze"].iloc[-x]:
+                l = l + 1
+            else:
+                break
+        return l
+
+    def squeezeLenWeekly(self):
+        l = 0
+        for x in range(1, 26):
+            if self.data["SqueezeWeekly"].iloc[-x]:
+                l = l + 1
+            else:
+                break
+        return l
 
     def createChart(self):
         fig, ax = plt.subplots(figsize=(8, 4))
+
         candlestick2_ohlc(ax, self.data['Open'], self.data['High'], self.data['Low'], self.data['Close'], width=0.4)
-        locs = [0,20,40,60,80,100,120,len(self.data)-1]
+
+        xs = len(self.data)
+        locs = [0,20,40,60,80,100,120,xs-1]
         plt.xticks(locs, self.data.loc[locs,'Date'])
+
+        a = self.data.sort_values('Date', ascending=False).reset_index(drop=True)
+
+        ma = a.loc[0:8, 'Close'].mean()
+        plt.hlines(ma, xs, xs + 1, colors="blue")
+        plt.text(x = xs + 2, y = ma, s = "8", fontsize = 8, color='b')
+
+        ma = a.loc[0:21, 'Close'].mean()
+        plt.hlines(ma, xs, xs + 2, colors="blue")
+        plt.text(x = xs + 3, y = ma, s = "21", fontsize = 8, color='b')
+
+        ma = a.loc[0:50, 'Close'].mean()
+        plt.hlines(ma, xs, xs + 4, colors="blue")
+        plt.text(x = xs + 5, y = ma, s = "50", fontsize = 8, color='b')
+
+        ma = a.loc[0:100, 'Close'].mean()
+        plt.hlines(ma, xs, xs + 6, colors="blue")
+        plt.text(x = xs + 7, y = ma, s = "100", fontsize = 8, color='b')
+
+        self.squeeze()
+        sq = self.squeezeLen()
+        plt.text(x = 80, y = self.data["Low"].min(), s = "Daily Squeeze = " + str(sq), fontsize = 8, color='b')
+
+        self.squeezeWeekly()
+        sq = self.squeezeLenWeekly()
+        plt.text(x = 110, y = self.data["Low"].min(), s = "Weekly Squeeze = " + str(sq), fontsize = 8, color='b')
+
         fig.autofmt_xdate()
         fig.tight_layout()
         figfile = BytesIO()
