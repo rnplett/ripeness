@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "app_function": "ripeMain.app",
+        "profile_name": "default",
+        "project_name": "ripeness",
+        "runtime": "python3.6",
+        "s3_bucket": "zappa-uik667xdp"
+        "aws_region": "us-west-1",
+    },
+    "dev_us_west_1": {
+        "aws_region": "us-west-1",
+        "extends": "dev"
+    },
+}

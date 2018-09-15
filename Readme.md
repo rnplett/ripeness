@@ -17,4 +17,11 @@ After you issue the above command you can now put the following url into your we
 http://127.0.0.1/hello
 This is the "Hello World" page for this app.
 
-<b>After Hello World</b> its time to do something more interesting. 
+<b>After Hello World</b> its time to do something more interesting.
+
+Zappa reference at:
+https://github.com/Miserlou/Zappa#running-the-initial-setup--settings
+
+```
+>zappa update dev_us_west_1
+```
